@@ -1,6 +1,7 @@
-# proyecto-vanadio
+## proyecto-vanadio
 En este repositorio, se buscará implementar un modelo 1D para baterias de Vanadio. Para código Python.
 
+### 0DVanadio
 
 En la primera parte de este proyecto se trabajará de acuerdo al balance de materia para un reactor CSTR, el cual viene dado por la siguiente expresión:
 
@@ -71,6 +72,8 @@ Para integrarlo con el modelo 1D, se necesita implementar:
   
 Para finalizar este avance se muestra el gráfico para la evolución del estado de carga de la batería.
 
+### D_corriente
 
+Aplicación práctica para potenciales de equilibrio, Butler-Volmer y densidad de corriente dependiente de concentraciones. Necesario para implementar a futuro. Útil para generar modelo potenciostatico.
 
 
