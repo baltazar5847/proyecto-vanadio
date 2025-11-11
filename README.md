@@ -1,4 +1,5 @@
-Ayudante encargador: Joaquín Barros/
+Ayudante encargador: Joaquín Barros
+
 Estudiante: Baltazar Pellizzon
 
 
