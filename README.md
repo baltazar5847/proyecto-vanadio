@@ -30,12 +30,21 @@ donde si la especie se consume (oxida) es de signo negativo. Y si se reduce/prod
 
 Entonces, esto estará definido en dos funciones: anode_tank y cathode_tank.
 
-El volumen se escogió de manera más o menos arbitraria, en internet de manera general, sale que los estanques de una batería de este tipo esta entre 1 a 5 litros. Se seleccionó 3 litros.
-Por otro lado, el tiempo de residencia se define como:
+El volumen se fijó en 60mL para cada estanque (Knehr, 2012).
 
-\tau = V_t/Q, nuevamente se considera de manera un poco arbitraria unos 10 minutos para el tiempo de residencia. Sin embargo, este dato puede que este explicitamente en más de algún documento acerca de baterias de Vanadio por lo que revisará a futuro.                      ####
+Lo que son 6 * 10^{-5} m3.
 
-Considerando este tiempo de residencia tenemos un Q de 5 * 10^{-6} m3/s.
+
+Por otro lado, el tiempo de residencia se define de acuerdo al caudal, el cual es:
+
+30 mL/min (Knehr, 2012) => 0,03 L/min => 5 * 10^{-4} L/s => Q =  5 * 10^{-7} m3/s
+
+Luego, la expresión para el tiempo de residencia es:
+
+\tau = V_t/Q,
+
+Así, el tiempo de residencia es de 120 segundos, o 2 minutos.
+
 
 Luego, el tiempo de descarga viene dado por la siguiente expresión:
 
@@ -47,7 +56,7 @@ I(\overline{t}) = (10 + 2) / 2
 
 donde C_tot es 1000 mol/m3 (suma de especies iniciales positivas y negativas) (Gandomi, 2016). Por otro lado, el \Delta SOC es 60% ya que se considera 80% como máxima carga y 20% como descargada. 
 
-De esta manera, podemos fijar el tiempo de descarga en unas 10,1 horas; es decir, 10 horas y 6 minutos, para una intensidad de corriente de 10 A.
+De esta manera, podemos fijar el tiempo de descarga en unos 579 segundos; es decir, 9 minutos y 39 segundos, para una intensidad de corriente de 10 A bajando hasta 2 A de manera lineal.
 
 Por otra parte, el área de celda se calcula como:
 
