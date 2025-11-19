@@ -3,6 +3,60 @@ Ayudante encargado: Joaquín Barros
 Estudiante: Baltazar Pellizzon
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################# ANTIGUO
+
 ## Proyecto-vanadio
 En este repositorio, se buscará implementar un modelo 1D para baterias de Vanadio. Para código Python.
 
