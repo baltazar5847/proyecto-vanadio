@@ -2,15 +2,31 @@ Ayudante encargado: Joaquín Barros
 
 Estudiante: Baltazar Pellizzon
 
+Entonces para comenzar nuestra modelación tenemos la siguiente ecuación maestra:
 
+$$\frac{d}{dt} [V(t) \cdot C_k(t)]$$
 
+Referencias:
 
+[1] Modelo Cinético (Knehr et al.)
 
+[1] K. W. Knehr et al., "A Transient Vanadium Flow Battery Model Incorporating Vanadium Crossover and Water Transport through the Membrane," Journal of The Electrochemical Society, vol. 159, no. 9, pp. A1446-A1459, 2012.
 
+[2] Parámetro de Resistencia (Zhou et al.)
 
+[2] X. L. Zhou et al., "Performance of a vanadium redox flow battery with a VANADion membrane," Applied Energy, vol. 180, pp. 353–359, Oct. 2016. Disponible: https://doi.org/10.1016/j.apenergy.2016.08.001
 
+[3] Modelado de Transporte y Volumen (Wang et al.)
 
+[3] W. Wang et al., " A new zero-dimensional dynamic model to study the capacity loss mechanism of vanadium redox flow batteries," Journal of Power Sources, vol. 603, 234428, 2024. Disponible: https://doi.org/10.1016/j.jpowsour.2024.234428
 
+[4] Termodinámica del Electrolito (Gandomi et al. o similares)
+
+[4] Y. A. Gandomi et al., " In Situ Potential Distribution Measurement anD Validated Model for All-Vanadium Redox Flow Battery," Journal of The Electrochemical Society, vol. 163, no. 1, pp. A5188-A5201, 2016.
+
+[5] Consultas, orden y verificación por Gemini AI por Google.
+
+Gemini. (2025, Noviembre). Consulta conversacional sobre modelo de simulación de VRFB. Google. [En línea]. Disponible: google.com/gemini
 
 
 
