@@ -2,6 +2,9 @@ Ayudante encargado: Joaquín Barros
 
 Estudiante: Baltazar Pellizzon
 
+## Proyecto-vanadio
+En este repositorio, se buscará implementar un modelo 1D para baterias de Vanadio. Para código Python.
+
 Entonces para comenzar nuestra modelación tenemos la siguiente ecuación maestra:
 
 $$\frac{d}{dt} [V(t) \cdot C_k(t)] = Q_{in}(t) \cdot C_{k,in}(t) - Q_{out}(t) \cdot C_k(t) + V(t) \cdot R_{k,hom}(t) + \dot{n}_{k,cell} + \dot{n}_{k,mem}(t) + \dot{n}_{k,add}(t)$$ 
@@ -57,14 +60,92 @@ $$J_{osm}(t) = K_{osm} \cdot (C_{total}^{pos}(t) - C_{total}^{neg}(t)) \cdot \ov
 
 [3]
 
+Lo que nos permite definir $$J_{total_vol}$$ como:
+
+$$J_{total_vol} = \overline{V}_{H2O} \cdot (\frac{n_d \cdot I(t)}{F} + K_{osm} \cdot (C_{total}^{pos}(t) - C_{total}^{neg}(t)))$$
+
+[3]
+
 En estas ecuaciones, $$n_d$$ son los moles de agua arrastrado por cada mol de carga. $$I(t)$$ es la corriente eléctrica instantánea. F es constante de Faraday. $$\overline{V}_{H2O}$$ es el volumen molar del agua. Por otro lado, $$K_{osm}$$ es el coeficiente osmótico proporcional a la permeabilidad de la membrana. Ambas $$C_{total}$$ representan concentraciones. 
 
 De esta forma la ecuación para el cambio en el volumen queda de la siguiente manera:
 
 $$\frac{dV(t)}{dt} = A_{mem} \cdot \overline{V}_{H2O} \cdot (\frac{n_d \cdot I(t)}{F} + K_{osm} \cdot (C_{total}^{pos}(t) - C_{total}^{neg}(t)))$$
 
+Ahora bien, $$\dot{n}_{cell}$$ se define como:
 
+$$\frac{v_k \cdot I(t)}{F}$$
 
+por Ley de Faraday. Donde $$v_k$$ es el coeficiente estequimétrico de la especie k.
+
+Por otro lado, tenemos que definir $$\dot{n}_{k,mem}$$.
+
+Si tomamos el negativo del flujo molar podemos tener algo del estilo:
+
+$$\dot{n}_{k,mem}^{neg}$$
+
+El cual se define como:
+
+$$\dot{n}_{k,mem}^{neg} = -A_{mem} \cdot J_k$$
+
+Donde J_k es un valor determinado por 3 fenómenos distintos: Difusión, Migración Eléctrica y Convección. Esto es,
+
+$$J_k = - \frac{D_k}{\delta} \cdot (C_k^{pos} - C_k^{neg}) - \frac{z_k \cdot D_k}{R \cdot T \cdot \delta} \cdot C_{k,avg} \cdot \Delta \phi + C_{k,avg} \cdot J_{total_vol}$$
+
+[3, 5] 
+
+$$D_k$$ es difusividad de la especie k en la membrana. $$\delta$$ es el espesor efectivo de la membrana. $$(C_k^{pos} - C_k^{neg})$$ es la diferencia de concentraciones entre ambos lados, fuerza impulsora de difusión. $$z_k$$ es la carga del ión k, dirección de movimiento en un campo eléctrico. $$\Delta \phi$$ es la diferencia de potencial eléctrico a través de la membrana, lo que genera migración iónica. $$C_{k,avg}$$ es concentración promedio para la especie k en la membrana. Por cierto, trabajaremos a una T estable de 25° grados asumiendo que la batería se encuentra bajo refrigeración o que se calienta por el aire ambiente. 
+
+Por último, $$C_{k}^{neg} \cdot \frac{dV_{neg}(t)}{dt}$$ es una expresión basada en cosas que ya hemos discutido. Por lo cual, su expresión explicita es:
+
+$$C_{k}^{neg} \cdot \frac{dV_{neg}(t)}{dt} = -A_{mem} \cdot C_k^{neg}(t) \cdot \overline{V}_{H2O} \cdot [\frac{n_d \cdot I(t)}{F} + K_{osm} \cdot (C_{total}^{pos}(t) - C_{total}^{neg}(t))]$$
+
+[3]
+
+Para el voltaje trabajaremos con Nernst, como,
+
+$$E_{OCV}(t) = E^{0} + \frac{R \cdot T}{n \cdot F} \cdot \ln(\frac{[{V_O}_2^{+}]_{pos} \cdot [V^{2+}]_{neg} \cdot [H^{+}]^{2}_{pos}}{[{VO}^{2+}]_{pos} \cdot [V^{3+}]_{neg}})$$
+
+[1,3,4,5]
+
+$$E_{OCV}(t)$$ es el potencial de celda para el circuito abierto en un tiempo t. $$E^{0}$$ es el potencial estándar de la celda, se deriva de los potenciales estándar de ambas semirreacciones. Luego, simplemente esta el factor Nernst $$\frac{R \cdot T}{n \cdot F}$$, que considera constantes, T absoluta y número de electrones transferidos (en ambas semi-reacciones es 1). Y luego, están las concetraciones para las especies de vanadio, tanto en el lado positivo como en el negativo. Por otro lado, $$[H^{+}]^{2}_{pos}$$ 
+
+viene de la semireacción 
+
+$$[{V_O}_2^{+}]_{pos}/[{VO}^{2+}]_{pos}$$
+
+donde su estequimetría es de 2.
+
+Si consideramos resistencia Ohmica, tendremos que el potencial de la celda se define como:
+
+$$E_{cell}(t) = E_{OCV}(t) +- I(t) \cdot R_{total}$$
+
+[1]
+
+Luego, para los protones tendremos este equilibrio secundario. Aparentemente es mejor plantear la disociación del ácido súlfurico de esta manera porque se disocia extremadamente rápido, así que un término empírico puede ocasionar malos resultados.
+
+Entonces, el equilibrio secundario queda como,
+
+$$HSO_4^{-} \leftrightarrow $$ H^{+} + SO_4^{2-}$$
+
+Donde esta ecuación se ve regida por la siguiente constante de equilibrio:
+
+$$K_2 = \frac{[H^{+}]_{libre} \cdot [SO_4^{2-}]}{[HSO_4^{-}]}$$
+
+A su vez, podemos plantear el balance de masa considerando electroneutralidad y $$K_2$$. Así, obtenemos una ecuación cuadrática en términos de concentración de protón libre, donde x = $$[H^+]_libre$$,
+
+$$x^2 + (C_{s,total} - C_{H,total} - K_2) \cdot x - K_2 \cdot C_{H,total} = 0$$
+
+Este es el valor de concentración de protón libre que se reemplazaría en la expresión de Nernst anteriormente explicada. 
+
+Podemos verificar que este valor esta correcto en la implementación del código, mediante la siguiente tabla. Disponible en: https://ibero.mx/campus/publicaciones/quimanal/pdf/tablasconstantes.pdf. Revisarse Ka2 para súlfurico.
+
+Y acoplando obtenemos $$E_cell$$
+
+Detalles:
+
+- Se trabajo en modo galvanostático, ya que la modelación potenciostática no logro darme correctamente. Por ejemplo, la carga de la batería caia más rapido a mayor SOC que a menor. Por otro lado, no se considero el equilibrio de Donnan para los protones libres, ya que el valor $$K_2$$ parece ser robusto. De todas manera, esta opción sigue disponible en caso de necesitar definir los protones libres de manera más precisa.
+  
 
 Referencias:
 
@@ -92,136 +173,5 @@ Referencias:
 
 [6] Gemini. (2025, Noviembre). Consulta conversacional sobre modelo de simulación de VRFB. Google. [En línea]. Disponible: google.com/gemini
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################# ANTIGUO
-
-## Proyecto-vanadio
-En este repositorio, se buscará implementar un modelo 1D para baterias de Vanadio. Para código Python.
-
-### 0DVanadio
-
-En la primera parte de este proyecto se trabajará de acuerdo al balance de materia para un reactor CSTR, el cual viene dado por la siguiente expresión:
-
-dC/dt = Q/V_t * (C_m - C) + r
-
-donde la parte izquierda de la suma viene a representar el término convectivo, mientras que r se representará de acuerdo a la ley de Faraday. De la siguiente manera:
-
-\dot{n} = I/(n_e/s_i * F) es la Ley de Faraday (Formulario I2, 2025), luego como el número de electrones intercambiado en las semireacciones del Vanadio es de 1 (Gandomi, 2016) y los coeficientes estequiométricos también es de 1. La expresión nos queda como:
-
-\dot{n} = I/(F)
-
-Luego, tenemos que en el volumen del tanque t, el cambio de concentración es:
-
-dC/dt = \dot{n}/V_t
-
-Por lo que si reemplazamos por la expresión simplificada de la Ley de Faraday que obtuvimos antes, se tiene,
-
-dC/dt = I/(F * V_t)
-
-donde si la especie se consume (oxida) es de signo negativo. Y si se reduce/produce es de signo positivo. 
-
-Entonces, esto estará definido en dos funciones: anode_tank y cathode_tank.
-
-El volumen se fijó en 60mL para cada estanque (Knehr, 2012).
-
-Lo que son 6 * 10^{-5} m3.
-
-
-Por otro lado, el tiempo de residencia se define de acuerdo al caudal, el cual es:
-
-30 mL/min (Knehr, 2012) => 0,03 L/min => 5 * 10^{-4} L/s => Q =  5 * 10^{-7} m3/s
-
-Luego, la expresión para el tiempo de residencia es:
-
-\tau = V_t/Q,
-
-Así, el tiempo de residencia es de 120 segundos, o 2 minutos.
-
-
-Luego, el tiempo de descarga viene dado por la siguiente expresión:
-
-t = (n * F * C_tot * V_t * \Delta SOC) / I    (Expresión derivada de la Ley de Faraday)
-
-donde I es una rampa lineal, es decir,
-
-I(\overline{t}) = (10 + 2) / 2
-
-donde C_tot es 1000 mol/m3 (suma de especies iniciales positivas y negativas) (Gandomi, 2016). Por otro lado, el \Delta SOC es 60% ya que se considera 80% como máxima carga y 20% como descargada. 
-
-De esta manera, podemos fijar el tiempo de descarga en unos 579 segundos; es decir, 9 minutos y 39 segundos, para una intensidad de corriente de 10 A bajando hasta 2 A de manera lineal.
-
-Por otra parte, el área de celda se calcula como:
-
-A_{cell} = l_{cell} * w_{cell} = 0,0224 * 0,03 = 6,72 * 10^{-4} m2     (Gandomi, 2016)
-
-Más adelante, se verá que se definen concentraciones iniciales y también la función RHS, la cual nos devuelve las 4 derivadas, una para cada especie en su respectivo estanque.
-
-Luego, se integra y se entrega un resumen.
-
-Este modelo 0D puede ofrecer los siguientes resultados:
-
-- Evolución de las concentraciones de Vanadio para cada estanque
-- Estado de carga de cada estanque
-- Estados finales
-
-Aún se puede mejorar considerando los protones, corrección posible mediante Donnan. (Aún no implementado)
-
-El siguiente paso que se quiere realizar es poder predecir el voltaje dinámico y la eficiencia de energía.
-
-Para integrarlo con el modelo 1D, se necesita implementar:
-
-- Ecuaciones de transporte en el electrodo
-- Definir la densidad de corriente de acuerdo al modelo Butler-Volmer, que depende del sobrepotencial (Aún no implementado)
-- Aplicar Ley de Ohm
-- Condiciones de borde, ya con ecuaciones de balance local
-- Se necesitará resolver con una resolución espacial
-  
-Para finalizar este avance se muestra el gráfico para la evolución del estado de carga de la batería.
-
-### D_corriente
-
-Aplicación práctica para potenciales de equilibrio, Butler-Volmer y densidad de corriente dependiente de concentraciones. Necesario para implementar a futuro. Útil para generar modelo potenciostatico.
 
 
