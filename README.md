@@ -4,7 +4,67 @@ Estudiante: Baltazar Pellizzon
 
 Entonces para comenzar nuestra modelación tenemos la siguiente ecuación maestra:
 
-$$\frac{d}{dt} [V(t) \cdot C_k(t)]$$
+$$\frac{d}{dt} [V(t) \cdot C_k(t)] = Q_{in}(t) \cdot C_{k,in}(t) - Q_{out}(t) \cdot C_k(t) + V(t) \cdot R_{k,hom}(t) + \dot{n}_{k,cell} + \dot{n}_{k,mem}(t) + \dot{n}_{k,add}(t)$$ 
+
+[1,3,4,5]
+
+La ecuación esta escrita de tal forma que represente:
+
+Acumulación = Entrada - Salida + Generación + Externalidades
+
+Luego, si desglosamos la derivada por regla de la cadena tenemos,
+
+$$\frac{d}{dt} [V(t) \cdot C_k(t)] = V(t) \cdot \frac{dC_k(t)}{dt} + C_k(t) \cdot \frac{dV(t)}{dt}$$
+
+Desarrollando,
+
+$$V(t) \cdot \frac{dC_k(t)}{dt} + C_k(t) \cdot \frac{dV(t)}{dt} = Q_{in} \cdot C_{in} - Q_{out} * C_k + V \cdot R_hom + \dot{n}_{cell} + \dot{n}_{mem}$$
+
+Luego pasamos restando y obtenemos nuestra ecuación explicita,
+
+$$\frac{dC_k}{dt} = \frac{1}{V(t)} \cdot [(Q_{in} \cdot C_{in} - Q_{out} \cdot C_k + \dot{n}_{cell} + \dot{n}_{mem}) - C_k(t) \cdot \frac{dV}{dt}]$$
+
+De acá, los términos para caudal se van a 0 si asumimos que el sistema es estable en el tiempo, es decir, que las bombas funcionan correctamente.
+
+De esta manera tenemos,
+
+$$\frac{dC_k}{dt} = \frac{1}{V(t)} \cdot ((\dot{n}_{cell} + \dot{n}_{mem}) - C_k(t) \cdot \frac{dV}{dt})$$
+
+Entonces $$\frac{dC_k}{dt}$$ es el cambio en la concentración para la especie k. Luego, $$\dot{n}_{cell}$$ es la producción o consumo neto de la especie k por la reacción electroquímica de la celda. $$\dot{n}_{mem}$$ es el flujo neto para la especie k en la membrana.
+$$C_k(t) \cdot \frac{dV}{dt}$$ es el ajuste para el cambio de volumen del estanque. Por último, $$\frac{1}{V(t)}$$ podemos tomarlo como un ajuste para pasar de moles a concentración.
+
+Ahora como se define explicitamente el cambio de volumen. Podemos definirlos por estanque de la siguiente forma:
+
+$$\frac{dV_{neg}(t)}{dt} = -A_{mem} \cdot J_{total_vol}(t) $$
+
+Y,
+
+$$\frac{dV_{pos}(t)}{dt} = +A_{mem} \cdot J_{total_vol}(t) $$
+
+[3]
+
+Aquí, $$A_{mem}$$ es el área de membrana (igual a área de celda). Donde $$J_{total_vol}(t)$$ se ve afectado por dos fenómenos físicos:
+
+- Arrastre electro-osmótico
+
+$$J_{eo}(t) = \frac{n_d \cdot I(t)}{F} \cdot \overline{V}_{H2O}$$
+
+[3]
+
+- Ósmosis
+
+$$J_{osm}(t) = K_{osm} \cdot (C_{total}^{pos}(t) - C_{total}^{neg}(t)) \cdot \overline{V}_{H2O}$$
+
+[3]
+
+En estas ecuaciones, $$n_d$$ son los moles de agua arrastrado por cada mol de carga. $$I(t)$$ es la corriente eléctrica instantánea. F es constante de Faraday. $$\overline{V}_{H2O}$$ es el volumen molar del agua. Por otro lado, $$K_{osm}$$ es el coeficiente osmótico proporcional a la permeabilidad de la membrana. Ambas $$C_{total}$$ representan concentraciones. 
+
+De esta forma la ecuación para el cambio en el volumen queda de la siguiente manera:
+
+$$\frac{dV(t)}{dt} = A_{mem} \cdot \overline{V}_{H2O} \cdot (\frac{n_d \cdot I(t)}{F} + K_{osm} \cdot (C_{total}^{pos}(t) - C_{total}^{neg}(t)))$$
+
+
+
 
 Referencias:
 
@@ -24,9 +84,13 @@ Referencias:
 
 [4] Y. A. Gandomi et al., " In Situ Potential Distribution Measurement anD Validated Model for All-Vanadium Redox Flow Battery," Journal of The Electrochemical Society, vol. 163, no. 1, pp. A5188-A5201, 2016.
 
-[5] Consultas, orden y verificación por Gemini AI por Google.
+[5] Ecuaciones y fundamentos teóricos.
 
-Gemini. (2025, Noviembre). Consulta conversacional sobre modelo de simulación de VRFB. Google. [En línea]. Disponible: google.com/gemini
+[5] F. Huerta, Formulario IIQ3843 — Procesamiento de hidrógeno para energías sostenibles, Escuela de Ingeniería, Pontifica Universidad Católica de Chile, Santiago, Chile, 2025.
+
+[6] Consultas, orden y verificación por Gemini AI por Google.
+
+[6] Gemini. (2025, Noviembre). Consulta conversacional sobre modelo de simulación de VRFB. Google. [En línea]. Disponible: google.com/gemini
 
 
 
